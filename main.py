@@ -34,11 +34,14 @@ async def play(ctx, url : str):
     channel = ctx.message.author.voice.channel
     voice = await channel.connect()
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+      await ctx.send("Cargando...")
       ydl.download([url])
     for file in os.listdir('./'):
       if file.endswith(".mp3"):
+        filename = os.path.basename(file)
         os.rename(file, "song.mp3")
     voice.play(discord.FFmpegPCMAudio("song.mp3"))
+    await ctx.send("Reproduciendo")
   else:
     await ctx.send("Oye tonto que tal si entras en un canal de voz antes de usar ese comando?")
 
