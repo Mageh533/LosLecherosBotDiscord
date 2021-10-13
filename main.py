@@ -1,4 +1,6 @@
 import discord
+import youtube_dl
+import os
 from discord.ext import commands
 from discord import FFmpegPCMAudio
 
@@ -10,12 +12,33 @@ async def on_ready():
   print("Bot is now logged in as {0.user}".format(client))
 
 @client.command(pass_context = True)
-async def play(ctx):
+async def play(ctx, url : str):
+  song_there = os.path.isfile("song.mp3")
+  try:
+    if song_there:
+      os.remove("song.mp3")
+  except PermissionError:
+    await ctx.send("Ya hay una musica reproduciéndose")
+    return
+
+  ydl_opts = {
+        'format': 'bestaudio/best',
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
+    }
+
   if (ctx.author.voice):
     channel = ctx.message.author.voice.channel
     voice = await channel.connect()
-    source = FFmpegPCMAudio('audio/Ameno.mp3')
-    player = voice.play(source)
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+      ydl.download([url])
+    for file in os.listdir('./'):
+      if file.endswith(".mp3"):
+        os.rename(file, "song.mp3")
+    voice.play(discord.FFmpegPCMAudio("song.mp3"))
   else:
     await ctx.send("Oye tonto que tal si entras en un canal de voz antes de usar ese comando?")
 
