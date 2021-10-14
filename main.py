@@ -24,7 +24,7 @@ async def play(ctx, url : str):
   if (ctx.author.voice):
     channel = ctx.message.author.voice.channel
     voice = await channel.connect()
-    YouTube(url).streams.first().download(filename='song.mp3')
+    YouTube(url).streams.get_audio_only().download(filename='song.mp3')
     for file in os.listdir('./'):
       if file.endswith(".mp3"):
         filename = os.path.basename(file)
