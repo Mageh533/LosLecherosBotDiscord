@@ -1,6 +1,6 @@
 import discord
-import youtube_dl
 import os
+from pytube import YouTube
 from discord.ext import commands
 from discord import FFmpegPCMAudio
 
@@ -21,22 +21,10 @@ async def play(ctx, url : str):
     await ctx.send("Ya hay una musica reproduciéndose")
     return
 
-  ydl_opts = {
-        'format': '249/250/251',
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-            'preferredquality': '192',
-        }],
-    }
-
   if (ctx.author.voice):
     channel = ctx.message.author.voice.channel
     voice = await channel.connect()
-    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-      await ctx.send("Cargando...")
-      ydl._ies = [ydl.get_info_extractor('Youtube')]
-      ydl.download([url])
+    YouTube(url).streams.first().download(filename='song.mp3')
     for file in os.listdir('./'):
       if file.endswith(".mp3"):
         filename = os.path.basename(file)
