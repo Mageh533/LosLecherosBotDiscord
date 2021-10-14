@@ -42,4 +42,21 @@ async def stop(ctx):
   else:
     await ctx.send("No estoy en ningun canal de voz")
 
+@client.command(pass_context = True)
+async def pause(ctx):
+  voice = discord.utils.get(client.voice_clients,guild=ctx.guild)
+  if voice.is_playing():
+    voice.pause()
+  else:
+    await ctx.send("Ya esta pausado")
+
+@client.command(pass_context = True)
+async def resume(ctx):
+  voice = discord.utils.get(client.voice_clients,guild=ctx.guild)
+  if voice.is_paused():
+    voice.resume()
+  else:
+    await ctx.send("Ya esta reproduciéndose")
+
+
 client.run(token)
