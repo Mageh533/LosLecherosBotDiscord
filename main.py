@@ -22,7 +22,7 @@ async def play(ctx, url : str):
     return
 
   ydl_opts = {
-        'format': 'bestaudio/best',
+        'format': '249/250/251',
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
@@ -35,6 +35,7 @@ async def play(ctx, url : str):
     voice = await channel.connect()
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
       await ctx.send("Cargando...")
+      ydl._ies = [ydl.get_info_extractor('Youtube')]
       ydl.download([url])
     for file in os.listdir('./'):
       if file.endswith(".mp3"):
