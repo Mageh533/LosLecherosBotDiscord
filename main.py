@@ -61,5 +61,11 @@ async def resume(ctx):
   else:
     await ctx.send("Ya esta reproduciéndose")
 
+@client.command(pass_context = True)
+async def speak(ctx):
+  channel = ctx.message.author.voice.channel
+  voice = await channel.connect()
+  voice.play(discord.FFmpegPCMAudio("audios/voz.mp3"))
+
 
 client.run(token)
