@@ -4,7 +4,7 @@ from pytube import YouTube
 from discord.ext import commands
 from discord import FFmpegPCMAudio
 
-token = "ODk3OTExNDYxOTY2NDAxNTg2.YWcjNg.oEyCG0BQqIBODVKGKrjPt0OXWp0"
+token = os.environ['DISCORD_TOKEN']
 client = commands.Bot(command_prefix = '-')
 
 @client.event
